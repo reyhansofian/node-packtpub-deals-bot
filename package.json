@@ -1,0 +1,29 @@
+{
+  "name": "packtpub-deals-bot",
+  "version": "1.0.0",
+  "description": "Telegram bot for PacktPub Deals of the Day",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^4.0.0",
+    "jsonfile": "^2.4.0",
+    "node-packtpub-download": "^1.7.4",
+    "node-schedule": "^1.2.1",
+    "node-telegram-bot-api": "^0.27.0",
+    "ramda": "^0.23.0",
+    "time": "^0.12.0",
+    "winston": "^2.3.1"
+  },
+  "devDependencies": {
+    "babel-eslint": "^7.2.1",
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb": "^14.1.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^4.0.0",
+    "eslint-plugin-react": "^6.10.3"
+  }
+}
