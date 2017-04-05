@@ -12,7 +12,6 @@ time.tzset('Asia/Jakarta');
 Date = time.Date; // eslint-disable-line
 
 const token = process.env.TELEGRAM_BOT_TOKEN;
-console.log('token', token);
 
 const entities = new Entities();
 const packtClient = new Packt.Client();
@@ -34,7 +33,7 @@ const logger = new winston.Logger({
   transports: [consoleTransport],
 });
 
-job.hour = 13;
+job.hour = 15;
 
 const constructMessage = (book) => {
   const title = `<b>${entities.decode(book.bookTitle)}</b>`;
@@ -69,7 +68,27 @@ bot.onText(/\/start/, (msg) => {
     if (groupData && !dataIsExists(groups)) {
       groups.push(groupData);
       jsonfile.writeFileSync('./groups.json', groups);
+      bot.sendMessage(groupData.id, 'Hello, I will show you Packtpub free ebook once a day :)');
     }
+  });
+});
+
+bot.onText(/\/end/, (msg) => {
+  logger.info('Incoming /end command', msg);
+
+  jsonfile.readFile('./groups.json', (err, groupData) => {
+    if (err) throw err;
+
+    const updateGroup = groupData.filter(data => data.id !== msg.chat.id);
+
+    bot
+      .sendMessage(msg.chat.id, 'Thank you :)')
+      .then(() => {
+        bot.leaveChat(msg.chat.id);
+      })
+      .then(() => {
+        jsonfile.writeFileSync('./groups.json', updateGroup);
+      });
   });
 });
 
@@ -92,4 +111,5 @@ schedule.scheduleJob(job, () => {
   });
 });
 
+logger.info('token', token);
 logger.info('Server is up!');
