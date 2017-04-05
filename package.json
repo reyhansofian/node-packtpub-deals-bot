@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "dotenv": "^4.0.0",
+    "html-entities": "^1.2.0",
     "jsonfile": "^2.4.0",
     "node-packtpub-download": "^1.7.4",
     "node-schedule": "^1.2.1",

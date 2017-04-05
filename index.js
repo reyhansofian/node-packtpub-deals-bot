@@ -1,5 +1,3 @@
-require('dotenv').config();
-
 const TelegramBot = require('node-telegram-bot-api');
 const Packt = require('node-packtpub-download');
 const schedule = require('node-schedule');
@@ -7,13 +5,16 @@ const time = require('time');
 const R = require('ramda');
 const jsonfile = require('jsonfile');
 const winston = require('winston');
+const Entities = require('html-entities').AllHtmlEntities;
 
 // We need to modify the Date object because the node-schedule datetime is based on server time.
 time.tzset('Asia/Jakarta');
 Date = time.Date; // eslint-disable-line
 
 const token = process.env.TELEGRAM_BOT_TOKEN;
+console.log('token', token);
 
+const entities = new Entities();
 const packtClient = new Packt.Client();
 const bot = new TelegramBot(token, { polling: true });
 const job = new schedule.RecurrenceRule();
@@ -36,11 +37,13 @@ const logger = new winston.Logger({
 job.hour = 13;
 
 const constructMessage = (book) => {
-  const title = `<b>${book.bookTitle}</b>`;
-  const summary = book.bookSummary;
+  const title = `<b>${entities.decode(book.bookTitle)}</b>`;
+  const summary = entities.decode(book.bookSummary);
 
   return 'Today\'s Packtpub Free Learning Book: \n' + title + '\n\n' + summary; // eslint-disable-line
 };
+
+const encodeImageUrl = imageUrl => imageUrl.replace(/\s/g, '%20');
 
 bot.onText(/\/start/, (msg) => {
   logger.info('Incoming /start command', msg);
@@ -73,14 +76,17 @@ bot.onText(/\/start/, (msg) => {
 schedule.scheduleJob('*/1 * * * *', () => {
   logger.info('worker started');
 
-  jsonfile.readFile('./groups.json', (err, data) => {
-    data.forEach((datum) => {
+  jsonfile.readFile('./groups.json', (err, groups) => {
+    groups.forEach((group) => {
       packtClient.fetchDealOfTheDay()
-        .then((res) => {
-          bot.sendMessage(datum.id, constructMessage(res), {
-            parse_mode: 'HTML',
-          });
-          bot.sendPhoto(datum.id, res.bookImage);
+        .then((book) => {
+          bot
+            .sendMessage(group.id, constructMessage(book), {
+              parse_mode: 'HTML',
+            })
+            .then(() => {
+              bot.sendPhoto(group.id, encodeImageUrl(book.bookImage));
+            });
         });
     });
   });
