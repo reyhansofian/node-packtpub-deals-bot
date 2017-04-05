@@ -1,5 +1,7 @@
 FROM node:7.4
 
+RUN npm install pm2 -g
+
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
@@ -9,4 +11,4 @@ RUN npm install
 COPY . /usr/src/app
 
 EXPOSE 8080
-CMD [ "node", "index.js" ]
+CMD [ "pm2-docker", "index.js" ]
