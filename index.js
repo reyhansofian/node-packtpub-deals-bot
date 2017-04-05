@@ -73,7 +73,7 @@ bot.onText(/\/start/, (msg) => {
   });
 });
 
-schedule.scheduleJob('*/1 * * * *', () => {
+schedule.scheduleJob(job, () => {
   logger.info('worker started');
 
   jsonfile.readFile('./groups.json', (err, groups) => {
