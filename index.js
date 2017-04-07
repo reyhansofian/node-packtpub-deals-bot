@@ -51,12 +51,21 @@ bot.onText(/\/start/, (msg) => {
   logger.info('Incoming /start command', msg);
 
   const isGroup = R.pathEq(['chat', 'type'], 'group');
+  const isPrivate = R.pathEq(['chat', 'type'], 'private');
   const groupHandler = body => ({
     id: body.chat.id,
     name: body.chat.title,
+    type: 'group',
+  });
+  const privateHandler = body => ({
+    id: body.chat.id,
+    name: `${body.chat.first_name} ${body.chat.last_name}`,
+    username: body.chat.username,
+    type: 'private',
   });
   const groupData = R.cond([
     [body => R.equals(isGroup(body), true), groupHandler],
+    [body => R.equals(isPrivate(body), true), privateHandler],
     [R.T, body => false],
   ])(msg);
 
