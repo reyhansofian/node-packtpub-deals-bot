@@ -34,6 +34,8 @@ const logger = new winston.Logger({
 });
 
 job.hour = 15;
+job.minute = 0;
+job.second = 0;
 
 const constructMessage = (book) => {
   const title = `<b>${entities.decode(book.bookTitle)}</b>`;
