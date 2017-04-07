@@ -1,6 +1,6 @@
 {
   "name": "packtpub-deals-bot",
-  "version": "1.0.0",
+  "version": "1.5.0",
   "description": "Telegram bot for PacktPub Deals of the Day",
   "main": "index.js",
   "scripts": {
