@@ -12,6 +12,7 @@ time.tzset('Asia/Jakarta');
 Date = time.Date; // eslint-disable-line
 
 const token = process.env.TELEGRAM_BOT_TOKEN;
+const PACKTPUB_URL = 'https://www.packtpub.com/packt/offers/free-learning';
 
 const entities = new Entities();
 const packtClient = new Packt.Client();
@@ -38,7 +39,7 @@ job.minute = 0;
 job.second = 0;
 
 const constructMessage = (book) => {
-  const title = `<b>${entities.decode(book.bookTitle)}</b>`;
+  const title = `<a href="${PACKTPUB_URL}">${entities.decode(book.bookTitle)}</a>`;
   const summary = entities.decode(book.bookSummary);
 
   return 'Today\'s Packtpub Free Learning Book: \n' + title + '\n\n' + summary; // eslint-disable-line
@@ -104,9 +105,13 @@ schedule.scheduleJob(job, () => {
           bot
             .sendMessage(group.id, constructMessage(book), {
               parse_mode: 'HTML',
+              disable_web_page_preview: true,
             })
             .then(() => {
               bot.sendPhoto(group.id, encodeImageUrl(book.bookImage));
+            })
+            .then(() => {
+              logger.info('worker finished with book detail', book);
             });
         });
     });
