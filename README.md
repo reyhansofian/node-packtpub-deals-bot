@@ -3,8 +3,7 @@
 ## Prerequisite
 
 1. **Token**. You need to talk to [@botfather](https://telegram.me/BotFather) and create a new bot.
-2. Add your bot to a group (this bot is meant for group chat for now)
-3. Send a `/start` message
+2. Start the bot by send `/start` message on your group (you need to invite the bot to the group first) or on you private chat
 
 ## How to use
 ### With Git
